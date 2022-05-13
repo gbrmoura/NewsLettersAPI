@@ -13,9 +13,13 @@ public class UserRepository : BaseRepository<UserEntity, AdvancedFilter>
     
     protected override IQueryable<UserEntity> Where(IQueryable<UserEntity> query, AdvancedFilter obj)
     {
-        return query.Where(field => field.Email.Contains(obj.Search) || 
-                                    field.FirstName.Contains(obj.Search) || 
-                                    field.LastName.Contains(obj.Search));
+        if (!string.IsNullOrEmpty(obj.Search))
+        {
+            return query.Where(field => field.Email.Contains(obj.Search) || 
+                                        field.FirstName.Contains(obj.Search) || 
+                                        field.LastName.Contains(obj.Search));
+        }
+        return query;
     }
     
     

@@ -13,10 +13,14 @@ public class NewsRepository : BaseRepository<NewsEntity, AdvancedFilter>
 
     protected override IQueryable<NewsEntity> Where(IQueryable<NewsEntity> query, AdvancedFilter obj)
     {
-        return query.Where(field => field.Author.Contains(obj.Search) ||
-                                    field.Title.Contains(obj.Search) ||
-                                    field.Category.Contains(obj.Search) ||
-                                    field.Content.Contains(obj.Search) ||
-                                    field.Date.ToString().Contains(obj.Search));
+        if (!string.IsNullOrEmpty(obj.Search))
+        {
+            return query.Where(field => field.Author.Contains(obj.Search) ||
+                                        field.Title.Contains(obj.Search) ||
+                                        field.Category.Contains(obj.Search) ||
+                                        field.Content.Contains(obj.Search) ||
+                                        field.Date.ToString().Contains(obj.Search));
+        }
+        return query;
     }
 }
