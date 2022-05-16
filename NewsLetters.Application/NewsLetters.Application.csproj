@@ -29,6 +29,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\NewsLetters.Infrastructure.CrossCutting.Http\NewsLetters.Infrastructure.CrossCutting.Http.csproj" />
     <ProjectReference Include="..\NewsLetters.Infrastructure.CrossCutting.Mapper\NewsLetters.Infrastructure.CrossCutting.Mapper.csproj" />
     <ProjectReference Include="..\NewsLetters.Infrastructure.Data\NewsLetters.Infrastructure.Data.csproj" />
     <ProjectReference Include="..\NewsLetters.Service\NewsLetters.Service.csproj" />

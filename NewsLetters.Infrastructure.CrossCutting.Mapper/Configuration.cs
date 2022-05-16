@@ -1,7 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using NewsLetters.Domain.Dtos;
 using NewsLetters.Domain.Entities;
-using NewsLetters.Infrastructure.CrossCutting.Mapper.Interface;
 using NewsLetters.Infrastructure.CrossCutting.Mapper.Mappers;
 
 namespace NewsLetters.Infrastructure.CrossCutting.Mapper;

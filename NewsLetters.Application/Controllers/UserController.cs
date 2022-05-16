@@ -1,9 +1,8 @@
 ﻿using System.Net;
 using Microsoft.AspNetCore.Mvc;
 using NewsLetters.Domain.Dtos;
-using NewsLetters.Domain.Entities;
 using NewsLetters.Domain.Models;
-using NewsLetters.Infrastructure.CrossCutting.Mapper.Mappers;
+using NewsLetters.Infrastructure.CrossCutting.Http.HttpResponse;
 using NewsLetters.Service.Services;
 
 namespace NewsLetters.Application.Controllers;
@@ -28,36 +27,30 @@ public class UserController : ControllerBase
         {
             // TODO: validar se os campos estão certos
         
-            if (_service.GetAll(new FilterDto() {PageSize = 10, PageIndex = 0, Search = userDto.Email}).Any())
+            if (_service.GetAll(new FilterDto() { PageSize = 10, PageIndex = 0, Search = userDto.Email }).Any())
             {
-                http.Message = "User already exists";
-                http.Code = (int) HttpStatusCode.BadRequest;
-                return BadRequest(http);
+                return  ClientErrorResponse.BadRequest("User already exists", null, null);
             }
             
             var dto = _service.Add(userDto);
-            
-            http.Code = (int) HttpStatusCode.OK;
-            http.Message = "Success";
-            http.Response = dto;
-            return StatusCode(http.Code, http);
+            return SuccessResponse.Ok("The user was created successfully", dto, null);
         }
         catch (Exception ex)
         {
             _logger.LogError("Error on {Controller} with the method POST: {ExceptionMessage}", nameof(UserController), ex.Message);
-            http.Code = (int) HttpStatusCode.InternalServerError;
-            http.Message = "Internal Server Error";
-            http.Error = ex.Message;
-            return StatusCode(http.Code, http);
+            return ErrorResponse.InternalServerError("Internal Server Error", null, ex.Message);
         }
     }
     
-    // [HttpPut]
-    // public IActionResult Put([FromBody] UserDto userDto)
-    // {
-    //     var user = userDto.ToEntity();
-    //     return Ok(user);
-    // }
+    [HttpPut]
+    public IActionResult Put([FromBody] UserDto userDto)
+    {
+        
+        // TODO: validar se os campos estão certos
+        
+        var user = userDto.ToEntity();
+        return Ok(user);
+    }
     
     // [HttpDelete]
     // public IActionResult Delete([FromBody] UserDto userDto)
@@ -78,20 +71,14 @@ public class UserController : ControllerBase
         var http = new DefaultResponse();
         try
         {
-            var dto = _service.GetAll(filterDto);
-            
-            http.Code = (int) HttpStatusCode.OK;
-            http.Message = "Success";
-            http.Response = dto;
-            return StatusCode(http.Code, http);
+            var enumerable = _service.GetAll(filterDto);
+            return SuccessResponse.Ok("Success", enumerable, null);
         }
         catch (Exception ex)
         {
             _logger.LogError("Error on {Controller} with the method GET: {ExceptionMessage}", nameof(UserController), ex.Message);
-            http.Code = (int) HttpStatusCode.InternalServerError;
-            http.Message = "Internal Server Error";
-            http.Error = ex.Message;
-            return StatusCode(http.Code, http);
+            return ErrorResponse.InternalServerError("Internal Server Error", null, ex.Message);
+            
         }
     }
     
